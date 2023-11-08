@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html>
+<head>
+<!-- Latest compiled and minified CSS -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+<link rel="stylesheet" href="/style.css" th:href="@{/style.css}">
+<meta charset="UTF-8">
+<title>Question Editing Form</title>
+</head>
+
+<body style="background-color:#343434;">
+	<div class="row" style="margin:0px;">
+		<div  class="col-md-4">
+			<div th:insert="Sidebar :: sidebar"></div>
+		</div>
+		
+		<div class="col-md-8">
+		
+			<div class="row">
+			
+				<div th:insert="util :: header"></div>
+				
+			</div>
+			
+			<div class="row" style="margin-top: 15px; margin-bottom: 5px;">
+			
+				<div class="col-md-12">
+				
+					<div class="jumbotron card card-block">
+					
+						<!-- main content goes within this jumbotron -->
+						
+						<div class="row">
+						
+							<h2 style="text-align: center;">Edit Question</h2>
+							
+						</div>
+						
+						<form th:action="@{/editQuestionObject}" method="POST" th:object="${questionObject}">
+							<input type="hidden" th:field="*{questionId}">
+							<input type="hidden" th:field="*{user}">
+							<input type="hidden" th:field="*{approved}">
+							<input type="hidden" th:field="*{reviewed}">
+							
+							<div class="row">
+								<div class="col-md-6">
+									<h4 style="text-align:center;">User Created:</h4>
+								</div>
+								<div class="col-md-6">
+									<p th:text="*{user.name}"></p>
+								</div>
+							</div>
+						
+							<div class="row">
+								<div class="col-md-6">
+									<h4 style="text-align:center;">Question Category:</h4>
+								</div>
+								<div class="col-md-6">
+									<p name="*{categoryTag}" th:text="*{categoryTag}"></p>
+									<input type="hidden" th:field="*{categoryTag}">
+								</div>
+							</div>
+							
+							<div class="row">
+								<div class="col-md-6">
+									<h4 style="text-align:center;">Question Content Type:</h4>
+								</div>
+								<div class="col-md-6">
+									<p name="*{contentTypeTag}" th:text="*{contentTypeTag}"></p>
+									<input type="hidden" th:field="*{contentTypeTag}">
+								</div>
+							</div>
+							
+							<div class="row">
+								<div class="col-md-6">
+									<h4 style="text-align:center;">Question Format:</h4>
+								</div>
+								<div class="col-md-6">
+									<p name="*{formatTag}" th:text="*{formatTag}"></p>
+									<input type="hidden" th:field="*{formatTag}">
+								</div>
+							</div>
+							
+							<div class="row">
+								<div class="col-md-6 text-center">
+									<h4 style="text-align:center;">Question:</h4>
+								</div>
+								<div class="col-md-6">
+									<input required type="text" name="questionContent" th:field="*{questionContent}">
+								</div>
+							</div>
+							
+							<div class="row" >
+								<div class="col-md-6 text-center">
+									<h4 style="text-align:center;">Answers:</h4>
+								</div>
+								
+								<div class="col-md-6">
+									
+								</div>
+							</div>
+							
+							<div class="row" th:each= "answer, iter : *{newAnswers}">
+								<div class="col-md-6 text-center mb-3">
+								<!-- 
+									<h4 th:case="true" style="text-align:center;color:green;">Correct</h4>
+									<h4 th:case="false" style="text-align:center;color:red" >Incorrect</h4>
+									 -->
+									<select required th:field="*{newAnswers[__${iter.index}__].correct}">
+									  <option value="true">Correct</option>
+									  <option value="false">Wrong</option>
+									</select>
+								</div>
+								<div class="col-md-6">
+									<input required type=hidden name="newAnswers" th:field="*{newAnswers[__${iter.index}__].answerId}">
+									<!-- <input required type=hidden name="newAnswers" th:field="*{newAnswers[__${iter.index}__].correct}">  -->
+									<input required type=hidden name="newAnswers" th:field="*{newAnswers[__${iter.index}__].question}">
+									<input required type="text" name="newAnswers" th:field="*{newAnswers[__${iter.index}__].answer}">
+								</div>
+							</div>
+							
+							<div class="row">
+								<div class="d-flex justify-content-end mb-2">
+									<input type="submit" value="SAVE" class="custom-button custom-button-black">
+									<button type="button" th:onclick="location.href='/questionDetails?questionId=' + [[*{questionId}]]" class="custom-button custom-button-red">CANCEL</button>
+								</div>
+							</div>
+							
+						</form>
+						
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+</html>

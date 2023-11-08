@@ -1,0 +1,30 @@
+<div th:fragment="header" class='jumbotron card card-block' style="width: 100%; top: 0; left: 0; background-color: white; padding: 10px 20px; margin-top:5px;">
+    <div class="row">
+    	<div class="col"> 
+    		<div class="d-flex justify-content-center">
+	    		<button th:onclick="location.href='/index'" class="custom-button custom-button-black">Home</button>
+	    	</div>
+	    </div>	
+		<div class="col">
+			<div class="d-flex justify-content-center">
+	    		<button th:onclick="location.href='/questionList'" class="custom-button custom-button-black">Questions</button>    
+	    	</div>
+	    </div>
+		<div class="col">
+			<div class="d-flex justify-content-center">
+	    		<button th:onclick="location.href='/quizList'" class="custom-button custom-button-black">Quizzes</button>
+	    	</div>
+	    </div>
+	    <div class="col">
+	    	<div class="d-flex justify-content-center">
+	    		<button th:onclick="location.href='/personalProfile'" class="custom-button custom-button-black">Profile</button>
+	    	</div>
+	    </div>
+	    <div class="col">
+	    	<div class="d-flex justify-content-center">
+	    		<button onclick="location.href='/exit'" class="custom-button custom-button-red">Logout</button>
+	    	</div>
+	    </div>
+    </div>
+</div>
+

@@ -1,0 +1,6 @@
+com.spring.web
+com.spring.web.controller
+com.spring.web.dal
+com.spring.web.model
+com.spring.web.model.EntityEnum
+com.spring.web.service

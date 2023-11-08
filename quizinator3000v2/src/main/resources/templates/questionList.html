@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html>
+<head>
+<!-- Latest compiled and minified CSS -->
+<meta charset="UTF-8">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+<link rel="stylesheet" href="/style.css" th:href="@{/style.css}">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+     
+<title>Question List</title>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/themes/smoothness/jquery-ui.css">
+<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+
+<script th:inline="javascript">
+
+    var real_data = /*[[${contentTags}]]*/'noValue';
+    $(document).ready(function() {
+        $("#contentId").autocomplete({
+            minLength : 2,
+            source : real_data
+        });
+    });
+    
+</script>
+
+</head>
+
+<body style="background-color:#343434;">
+<div class="row"  style="margin:0px;">
+	<div  class="col-md-4">
+		<div th:insert="Sidebar :: sidebar"></div>
+	</div>
+	
+	<div class="col-md-8">
+	
+		<div class="row">
+		
+			<div th:insert="util :: header"></div>
+			
+		</div>
+		
+		<div class="row" style="margin-top: 15px; margin-bottom: 5px;">
+		
+			<div class="col-md-12">
+			
+				<div class="jumbotron card card-block">
+				<!-- main content goes within this jumbotron -->
+					<form th:action="@{'/questionListSorted?id=' + ${session.id}}" method="POST" id="form">
+					<div class="row">
+						
+						<div class="col-md-12">
+						
+							<p style="text-align:center;">Filter By:</p>
+							
+						</div>		
+											
+						<div class="col-md-6">
+						
+							<p style="text-align:right;">Content:</p>
+							
+						</div>
+						
+						<div class="col-md-6">
+							
+							    <input type="text" id="contentId" name="contentType">
+							    
+						</div>
+						
+						<div class="col-md-6">
+						
+							<p style="text-align:right;">Category:</p>
+							
+						</div>
+						
+						<div class="col-md-6">
+						
+							    <select id="categoryId" name="categoryType">
+									
+									<option value="none" selected disabled hidden>Select a Category Type</option>
+									<option value="Course Content">Course Content</option>
+									<option value="Interview Preparation">Interview Preparation</option>
+								
+								</select> 
+							
+						</div>
+						
+						<div class="col-md-6">
+						
+							<p style="text-align:right;">Format:</p>
+							
+						</div>
+						
+						<div class="col-md-6">
+						
+							    <select id="formatId" name="formatType">
+									
+									<option value="none" selected disabled hidden>Select a Format Type</option>
+									<option value="Short Answer">Short Answer</option>
+									<option value="Multiple Choice">Multiple Choice</option>
+									<option value="Multiple Answer">Multiple Answer</option>
+								
+								</select> 
+							    
+						</div>
+						<div class="col-md-12 justify-content-center d-flex">
+							<button type="submit" id="button2" class="custom-button custom-button-black w-auto text-center">Filter</button>
+						</div>
+					</div>
+					
+					<div class="row">
+					
+						<h2 style="text-align: center;">Questions</h2>
+						
+					</div>
+		
+					
+					<div class="row">
+					
+						<div class="col-md-12 offset-md-10"> <!-- Use 'offset-md-6' to push the button to the right -->
+							
+						</div>
+					</div>
+					</form>
+					
+					<div class="row">
+						
+						<div class="d-flex justify-content-center mb-3">
+							<input type="button" value="Create Question" th:onclick="location.href='/createQuestion'" class="custom-button custom-button-black"/>
+						</div>
+					</div>
+					
+
+
+					<div class="row">
+					
+						<div class="col-md-6 text-center">
+							<div class="row">
+								<h2 style="text-align: center;">My Questions</h2>
+							</div>
+							<div class="row" th:if="${#lists.isEmpty(myQuestions)}">
+								<p style="color:red; text-align:center;" >No Questions Found!</p>						
+							</div>
+							<div class="row" th:if="${!#lists.isEmpty(myQuestions)}">
+								<div class="row align-items-center" th:each="question : ${myQuestions}">
+									<div class="col-10">
+										<a class="link-offset-2 link-underline link-underline-opacity-0 fs-5 text" th:href="@{/questionDetails(questionId=${question.questionId})}" th:text="${question.questionContent}"></a>
+										<!-- 
+										<a th:if="${question.approved}" class="col link-offset-2 link-underline link-underline-opacity-0 fs-5 text" th:href="@{/questionDetails(questionId=${question.questionId})}" th:text="${question.questionContent} + ' (APPROVED)'"></a>
+										<a th:if="${!question.approved and question.reviewed}" class="link-offset-2 link-underline link-underline-opacity-0 fs-5 text" th:href="@{/questionDetails(questionId=${question.questionId})}" th:text="${question.questionContent} + ' (REJECTED)'"></a>
+										<a th:if="${!question.approved and !question.reviewed}" class="col link-offset-2 link-underline link-underline-opacity-0 fs-5 text" th:href="@{/questionDetails(questionId=${question.questionId})}" th:text="${question.questionContent} + ' (PENDING)'"></a>
+										 -->
+									</div>
+									<div class="col-1">
+										<i th:if="${question.approved}" class="fa fa-check" style="font-size:30px;color:green"></i>
+										<i th:if="${!question.approved and question.reviewed}" class="fa fa-times" style="font-size:36px;color:red"></i>
+										<i th:if="${!question.approved and !question.reviewed}" class="fa fa-clock-o" style="font-size:30px;color:orange"></i>
+									</div>
+									<div class="col-1"> 
+										<button value="View Details" th:onclick="location.href='/questionDetails?questionId=' + [[${question.questionId}]]" class="custom-button custom-button-black">View</button>
+									</div>
+									<div class="row" style="height:1px;margin-top:5px;margin-bottom:5px;"><div class="col-2"></div><div class="col-9" style="background-color:rgb(255, 213, 213);"></div><div class="col-1"></div></div>
+								</div>
+								
+							</div> 
+						</div>
+						
+						<div class="col-md-6 text-center">
+							<div class="row">
+								<h2 style="text-align: center;">All Questions</h2>
+							</div>
+							<div class="row" th:if="${#lists.isEmpty(questions)}">
+								<p style="color:red; text-align:center;" >No Matching Public Questions Found</p>						
+							</div>
+							<div class="row" th:if="${!#lists.isEmpty(questions)}">
+								<div class="row" th:each="question : ${questions}" style="align-items:center;">
+									<div class="col-9">
+										<a class="link-offset-2 link-underline link-underline-opacity-0 fs-5 text" th:href="@{/questionDetails(questionId=${question.questionId})}" th:text="${question.questionContent}"></a>
+									</div>
+									<div class="col-1">
+										<a th:onclick="location.href='/lockQuestion?questionId=' + [[${question.questionId}]] + '&amp;page=questionList'">
+											<i th:if="${#lists.contains(lockedQuestions, question)}" class="fa fa-lock" style="font-size:24px;color:black"></i>
+											<i th:if="${!#lists.contains(lockedQuestions, question)}" class="fa fa-unlock" style="font-size:24px;color:red"></i>
+										</a>
+									</div>
+									<div class="col-2"> 
+										
+										<button value="View Details" th:onclick="location.href='/questionDetails?questionId=' + [[${question.questionId}]]" class="custom-button custom-button-black">View</button>									
+									</div>
+									
+									<div class="row" style="height:1px;margin-top:5px;margin-bottom:5px;"><div class="col-2"></div><div class="col-8" style="background-color:rgb(255, 213, 213);"></div><div class="col-2"></div></div>
+								</div>
+							</div>
+						</div>
+					
+			
+				</div>
+				
+			</div>
+			
+		</div>
+	</div>
+	</div>
+</body>
+</html>

@@ -1,0 +1,133 @@
+.custom-button {
+    text-decoration: none;
+    color: #343434;
+    font-size: 1.17em;
+    margin-right: 20px;
+    display: inline-block;
+    padding: 5px 10px;
+    border: none;
+    border-radius: 5px;
+}
+
+.custom-button-black {
+    background-color: #343434;
+    color: white;
+}
+
+.custom-button-black:hover{
+	background-color: rgb(39, 39, 39);
+}
+
+.custom-button-red {
+    background-color: rgb(255, 132, 132);;
+    color: white;
+}
+
+.custom-button-red:hover {
+    background-color: #FF5757;;
+    color: white;
+}
+
+.custom-x-button-red {
+    border-radius: 5px;
+    color: white;
+    background: rgb(255, 132, 132);
+    border: none;
+}
+	
+.custom-x-button-red:hover {
+    background-color: #FF5757;;
+    color: white;
+}
+	/* Style tab links */
+.tablink {
+	background-color: #f2f2f2;
+	color: black;
+	float: left;
+	border: none;
+	outline: none;
+	cursor: pointer;
+	padding: 14px 16px;
+	font-size: 17px;
+	margin-left: auto;
+}
+
+.center {
+  margin: auto;
+  width: auto;
+  padding: 10px;
+
+}
+
+.active {
+    background-color: white;
+}
+
+.submit-btn {
+	background-color: rgb(255, 132, 132);
+	color: white;
+	border-radius: 30px;
+	border: none;
+	width: 80px;
+	height: 40px;
+	box-shadow: 0 5px #999;
+    cursor: pointer;
+
+}
+
+.submit-btn:hover {
+	background-color: #FF5757;
+}
+
+.submit-btn:active {
+      box-shadow: 0 3px #666;
+      transform: translateY(2px);
+}
+
+.inprofile{
+  border-bottom: 1px solid rgb(255, 213, 213)
+}
+
+td{
+	width: -5px;
+
+}
+
+tr:last-child {
+ border-bottom: none;
+}
+
+.noteHover:Hover{
+    cursor:pointer;
+}
+
+#progressBarContainer {
+    display: flex; /* Use flex display to vertically center its contents */
+    align-items: center; /* Vertically center the contents */
+    width: 100%;
+    height: 20px;
+    background-color: #f0f0f0;
+    border-radius: 10px;
+    margin-top: 10px;
+}
+
+#progressBar {
+    width: 100%;
+    height: 100%;
+    background-color: #4caf50;
+    border-radius: 10px;
+    transition: width 0.5s; /* Add a smooth transition effect */
+}
+
+#progressBar::before {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 0;
+    width: 100%;
+    height: 1px;
+    background-color: transparent; /* Adjust as needed */
+    transform: translateY(-50%);
+}
+
+

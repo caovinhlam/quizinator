@@ -1,0 +1,44 @@
+<script th:inline="javascript">
+    var real_data = /*[[${infoList}]]*/'noValue';
+    $(document).ready(function() {
+        $("#people").autocomplete({
+            minLength : 2,
+            source : real_data
+        })
+    });
+    
+</script>
+							<div th:fragment="indexform" class="row">
+								<div class="col-md-6">
+									<h5 style="text-align:center;">Search Students :</h5>
+								</div>
+						
+								<form th:action="@{/searchForStudents}" method="POST"  th:object="${blankuser}">
+									<table style="margin: 0 auto;  width: 65%;  padding-bottom: 20px;">
+										<tr>
+											<td align="right">Search student name :</td>
+											<td align="left">
+												<input type="text" id="people" th:field="*{name}" placeholder="Search" required maxlength=100/>
+											</td>
+											
+											<td align="left">
+												<input class="custom-button custom-button-black" type="submit" value="Search" style="margin-left: 86%; margin-bottom: 0; "/>
+											</td>
+									</table>
+								</form>
+							</div>
+							<div class="row" th:if="${students}">
+								<table>
+									<tr th:each="student : ${students}" class="inprofile">
+										<td align="right">Name :</td>
+										<td align="left" th:text="${student.name}"></td>
+										<td align="right">Email :</td>
+										<td align="left" th:text="${student.email}"></td>
+										<td align="right">Role :</td>
+										<td align="left" th:text="${student.userRole}"></td>
+										<td align="left">
+											<input class = "custom-button custom-button-black" type="button" value="Edit info" th:onclick="location.href='/editStudent?id=' + [[${student.userId}]] + '&amp;page=editStudent'" />
+										</td>
+									</tr>	
+								</table>
+							</div>

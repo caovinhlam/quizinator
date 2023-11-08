@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html>
+<head>
+<!-- Latest compiled and minified CSS -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+<link rel="stylesheet" href="/style.css" th:href="@{/style.css}">
+<meta charset="UTF-8">
+<title>Home</title>
+</head>
+<body style="background-color:#343434;">
+<div class="row" style="margin:0px;">
+	<div  class="col-md-4">
+		<div th:insert="Sidebar :: sidebar"></div>
+	</div>
+	
+	<div class="col-md-8">
+	
+		<div class="row">
+		
+			<div th:insert="util :: header"></div>
+			
+		</div>
+		
+			<div class="row" style="margin-top: 15px; margin-bottom: 5px;">
+				<div class="col-md-12">
+					<div class="jumbotron card card-block" th:object="${quiz}">
+						<!-- main content goes within this jumbotron -->	
+						<div class="row">
+							<h2 style="text-align: center;">Quiz Details</h2>
+						</div>
+						
+						<div class="row" style="display:flex">
+							<div class="col-md-6">
+								<h3 style="text-align:center;">Quiz Name:</h3>
+							</div>
+							<div class="col-md-6">
+								<p name="*{contentTypeTag}" th:text="${quiz.quizName}"></p>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-md-6">
+								<h3 style="text-align:center;">Quiz Category:</h3>
+							</div>
+							<div class="col-md-6">
+								<p name="*{categoryTag}" th:text="*{quizType}"></p>
+							</div>
+						</div>	
+						<div class="row">
+							<div class="col-md-6">
+								<h3 style="text-align:center;">Time allowed:</h3>
+							</div>
+							<div class="col-md-6" th:switch="*{allowedTime}">
+								<div th:case="2147483647" th:text="${'No Limit'}"></div>
+								<div th:case="*" th:text="*{allowedTime}"></div>
+							</div>
+						</div>	
+						<div class="row">
+							<div class="col-md-6">
+								<h3 style="text-align:center;">Question amount:</h3>
+							</div>
+							<div class="col-md-6">
+								<p name="*{formatTag}" th:text="*{numberOfQuestions}"></p>
+							</div>
+						</div>
+						<div  class="row" style="height:1px;"><div class="col-2"></div><div class="col-8" style="background-color:rgb(255, 213, 213);"></div><div class="col-2"></div></div>
+						<div style="position: -webkit-sticky;position: sticky;background-color:white;top: 0;padding: 50px;font-size: 20px;">
+						<div class="row">
+						    <div class="col-2">
+						    </div>
+						    <div class="col-8">
+						        <div id="progressBarContainer">
+						            <div id="progressBar"></div>
+						        </div>
+						    </div>
+
+						</div>
+						
+						<div class="row justify-content-center">
+						    <div class="col-3 text-center d-flex justify-content-center align-items-center">
+						        <!-- <span id="timeLeft"></span> minutes  -->
+						        <h2 id="timeLeft"></h2><h2 th:if="${quiz.allowedTime} != '2147483647'">:</h2>
+						        <h2 id="timeSeconds"></h2>
+						        <h2 th:if="${quiz.allowedTime} == '2147483647'"> No Time Limit </h2>
+						    </div>
+						</div>
+						</div>
+						<script th:inline="javascript">
+						     // Thymeleaf variables to pass values from Java to JavaScript
+						     var allowedtime = /*[[${quiz.allowedTime}]]*/ 10; // Set your desired timer duration in seconds
+						     var timerDuration = allowedtime * 60; // Convert minutes to seconds
+						     var progressBarInterval = 100; // Set the interval for progress bar update in milliseconds
+						</script>
+						
+						<form id="myForm" th:action="@{/quizAttemptObject?(id=${quiz.quizID})}" method="POST" th:object="${tempSubmission}" >
+							<div class="row mb-3" th:each= "question : ${questions}">
+								<div th:switch="${question.formatTag.name()}">
+								
+								<!-- 
+									<div th:case="MULTI_ANSWER">
+										<div class="row">
+											<div class="col-md-6 text-center">
+												<h3 style="text-align:center;">content:</h3>
+											</div>
+											<div class="col-md-6" th:text="${question.questionContent}">
+											</div>
+
+											<div class="row" style="display:flex" th:each="answer : ${question.answers}">
+												<div class="col-md-3 text-center">
+													
+												</div>
+												<div class="col-md-3" th:text="${answer.answer}">
+												</div>
+												<div class="col-md-3 text-center">
+													<input type="checkbox" id="" th:field="*{userSelectionMap['__${answer.answerId}__']}">
+												</div>	
+											</div>
+										</div>
+									</div>
+									
+									
+									<div th:case="MULTI_CHOICE">
+										<div class="row">
+											<div class="col-md-6 text-center">
+												<h3 style="text-align:center;">content:</h3>
+											</div>
+											<div class="col-md-6" th:text="${question.questionContent}">
+											</div>
+											<div class="row" style="display:flex" th:each="answer : ${question.answers}">
+												<div class="col-md-3 text-center">
+													
+												</div>
+												<div class="col-md-3" th:text="${answer.answer}">
+												</div>
+												<div class="col-md-3 text-center" >
+													<input type="checkbox" th:class="'custom-checkbox ' + ${question.questionId}" id="html" th:field="*{userSelectionMap['__${answer.answerId}__']}">
+												</div>
+											</div>
+										</div>
+									</div>
+									
+									
+									
+									<div th:case="SHORT_ANSWER">
+										<div class="row">
+											<div class="col-md-6 text-center">
+												<h3 style="text-align:center;">content:</h3>
+											</div>
+											<div class="col-md-6" th:text="${question.questionContent}">
+											</div>
+											<div class="row" style="display:flex" th:each="answer : ${question.answers}">
+												<div class="col-md-3 text-center">
+													
+												</div>
+												<div class="col-md-3" th:text="${answer.answer}">
+												</div>
+												<div class="col-md-3 text-center">
+													<textarea id="" th:field="*{userShortAnswerMap['__${answer.answerId}__']}" rows="4" cols="50"></textarea>
+												</div>	
+											</div>
+										</div>
+									</div>	
+									 -->
+									
+									<div th:case="MULTI_ANSWER">
+										<div class="row">
+											<div class="col-md-2">
+											
+											</div>
+											<h4 class="col-md-10 text-start" th:text="${question.questionContent}"></h4>
+
+											<div class="row" style="display:flex" th:each="answer : ${question.answers}">
+												
+												<div class="col-md-3 text-center">
+													
+												</div>
+												<div class="col-md-9 text-start">
+													<input type="checkbox" id="" th:field="*{userSelectionMap['__${answer.answerId}__']}">
+													<span class="text-start" th:text="${answer.answer}"></span>
+												</div>	
+												
+											</div>	
+										</div>
+									</div>
+									
+									<div th:case="MULTI_CHOICE">
+										<div class="row">
+											<div class="col-md-2">
+												
+											</div>
+											<h4 class="col-md-10 text-start" th:text="${question.questionContent}"></h4>											
+											
+											<div class="row" style="display:flex" th:each="answer : ${question.answers}">
+												
+												<div class="col-md-3 text-center">
+													
+												</div>
+												<div class="col-md-9 text-start" >
+													<input type="checkbox" th:class="'custom-checkbox ' + ${question.questionId}" id="html" th:field="*{userSelectionMap['__${answer.answerId}__']}">
+													<span class="text-start" th:text="${answer.answer}"></span>
+												</div>
+											
+											</div>
+										</div>
+									</div>
+									
+									<div th:case="SHORT_ANSWER">
+										<div class="row">
+											<div class="col-md-2">
+												
+											</div>
+											<h4 class="col-md-10 text-start" th:text="${question.questionContent}"></h4>
+											
+											<div class="row" style="display:flex" th:each="answer : ${question.answers}">
+												<div class="col-md-1 text-center">
+													
+												</div>
+												<div class="col-md-9 text-center">
+													<textarea id="" th:field="*{userShortAnswerMap['__${answer.answerId}__']}" rows="4" cols="50"></textarea>
+												</div>	
+											</div>
+										</div>
+									</div>	
+																
+								</div>
+							</div>
+							
+						<div class="row">
+							<div class="d-flex justify-content-end mb-2">
+								<input class="custom-button custom-button-black" type="submit" value="SUBMIT"/>
+							</div>
+						</div>
+					</form>
+				
+				</div>
+			</div>
+		</div>
+	</div>
+	</div>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        var form = document.getElementById('myForm');
+        var progressBar = document.getElementById('progressBar');
+        var progressBarContainer = document.getElementById('progressBarContainer');
+        var timeLeftDisplay = document.getElementById('timeLeft');
+        var timeRightDisplay = document.getElementById('timeSeconds');
+        
+        var currentTime = 0;
+        var timer = setInterval(function() {
+			if (timerDuration != 128849018820) { // if no time limit then do a countdown
+				currentTime += progressBarInterval / 1000; // Convert interval to seconds
+	            var progressPercentage = (currentTime / timerDuration) * 100;
+	            
+	            progressBar.style.width = progressPercentage + '%';
+	            
+	            var timeLeftMinutes = Math.max(0, Math.ceil((timerDuration - currentTime) / 60) - 1);
+	            var timeSeconds = Math.max(0, Math.ceil((timerDuration - currentTime) % 60 ) - 1);
+	            timeLeftDisplay.textContent = timeLeftMinutes;
+				timeRightDisplay.textContent = timeSeconds < 10 ? "0" + timeSeconds : timeSeconds;  
+	            if (currentTime >= timerDuration) {
+	                clearInterval(timer);
+	                form.submit();
+	            }	
+			}
+            
+        }, progressBarInterval);
+    });
+</script>
+
+<script>
+
+    const checkboxes = document.querySelectorAll('.custom-checkbox');
+    
+    checkboxes.forEach(checkbox => {
+        checkbox.addEventListener('change', function() {
+            checkboxes.forEach(otherCheckbox => {
+            	console.log("Othercheckbox");
+            	console.log(otherCheckbox.classList);
+            	console.log("checkbox");
+            	console.log(checkbox.classList);
+            	
+                if (otherCheckbox !== checkbox) {
+                	if (otherCheckbox.classList.value == checkbox.classList.value) {
+                    	otherCheckbox.checked = false;
+                	}
+                }
+            });
+        });
+    });
+    
+</script>
+
+</body>
+</html>
+

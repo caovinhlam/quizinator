@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html>
+<head>
+<!-- Latest compiled and minified CSS -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+<link rel="stylesheet" href="/style.css" th:href="@{/style.css}">
+<meta charset="UTF-8">
+<title>Create Quiz Form</title>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/themes/smoothness/jquery-ui.css">
+<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+
+</head>
+
+<body style="background-color:#343434;">
+	<div class="row" style="margin:0px;">
+		<div  class="col-md-4">
+			<div th:insert="Sidebar :: sidebar"></div>
+		</div>
+		
+		<div class="col-md-8">
+		
+			<div class="row">
+			
+				<div th:insert="util :: header"></div>
+				
+			</div>
+			
+			<div class="row" style="margin-top: 15px; margin-bottom: 5px;">
+			
+				<div class="col-md-12">
+				
+					<div class="jumbotron card card-block">
+					
+						<!-- main content goes within this jumbotron -->
+						
+						<div class="row mb-3" id="quizId">
+						
+							<h2 style="text-align: center;">Auto Generate Quiz</h2>
+							
+						</div>
+						<div class="row" th:if="${message == 'nope'}">
+							<p style="color:red; text-align:center;" >Not enough matching questions found in the question bank</p>
+							<p style="color:red; text-align:center;" th:text="${'Matching Questions Found: ' + #lists.size(matchingQuestions)}"></p>
+							<p style="color:red; text-align:center;" th:text="${'Matching Locked Questions Found: ' + #lists.size(matchingLockedQuestions)}"></p>
+						</div>
+						<div class="row" th:if="${message == 'nope1'}">
+							<p style="color:red; text-align:center;" >Please Select at least one Content Type</p>
+						</div>
+						<div class="row" th:if="${message == 'nope2'}">
+							<p style="color:red; text-align:center;" >Please Select at least one Format Type</p>
+						</div>
+						<div class="row" th:if="${message == 'nope3'}">
+							<p style="color:red; text-align:center;" >Please Select a Category Type</p>
+						</div>
+						<form th:action="@{/createQuizAuto}" method="POST" th:object="${tempQuiz}">
+						
+							<div class="row">
+								<div class="col-md-6">
+									<p style="text-align:right;">Quiz Name:</p>
+								</div>
+								
+								<div class="col-md-6">
+									<input required type="text" name="quizName" th:field="*{quizName}">
+								</div>
+							</div>
+							
+							<div class="row">
+								<div class="col-md-6">
+									<p style="text-align:right;">Maximum Time Limit:</p>
+								</div>
+								<div class="col-md-6">
+									
+										<input class="format " type="checkbox" id="noTimeLimit" name="noTimeLimit" th:field="*{noTimeLimit}"  onchange="timeLimit(this)">
+										<label for="noTimeLimit" style="margin-right:25px;">No Time Limit</label>
+										
+									
+										<input class="col-1" required type="number" min="1" id="allowedTime" name="allowedTime" th:field="*{allowedTime}" >
+										<label for="allowedTime" >minutes</label>
+									
+									<!-- <input required type="number" name="timeLimit">  -->
+								</div>
+							</div>
+							
+							<div class="row">
+								<div class="col-md-6 text-center">
+									<p style="text-align:right;">Number of Questions:</p>
+								</div>
+								
+								<div class="col-md-6">
+									<input required type="number" name="numberOfQuestions" >
+								</div>
+							</div>
+							
+							<div class="row">
+								<div class="col-md-6">
+							
+								<p style="text-align:right;">Category:</p>
+								
+								</div>
+									<div class="col-md-6" th:if="${user.userRole.name() == 'SALES'}">
+								
+									    <select id="categoryId" name="categoryTag">
+											<option value="INTERVIEW_PREP">Interview Preparation</option>																					
+										</select> 
+										
+									</div>
+									<div class="col-md-6" th:if="${user.userRole.name() == 'TRAINING'}">
+								
+									    <select id="categoryId" name="categoryTag">
+											<option value="COURSE_CONTENT">Course Content</option>																					
+										</select> 
+										
+									</div>
+									<div class="col-md-6" th:if="${user.userRole.name() == 'POND' or user.userRole.name() == 'BEACHED' or user.userRole.name() == 'TRAINER'}">
+								
+									    <select id="categoryId" name="categoryTag">
+											
+											<option value="none" selected disabled hidden>Select a Category Type</option>
+											<option value="COURSE_CONTENT">Course Content</option>
+											<option value="INTERVIEW_PREP">Interview Preparation</option>
+										
+										</select> 
+									</div>
+							</div>
+						<div class="row mb-3 mt-3">
+								<h4 style="text-align:center;">Select Format Type(s):</h4>
+							</div>
+							
+							<div class="row">
+								<div class="row justify-content-center">
+									<input type="checkbox" class="format col-1" name="selectFormats" th:each="formatType : ${T(com.spring.web.model.EntityEnum.FormatTag).values()}" th:value="${{formatType}}" th:text="${formatType}">
+																	
+								</div>
+							</div>
+							
+							<div class="row mb-3 mt-4">
+								<h4 style="text-align:center;">Select Content Type(s):</h4>
+							</div>
+							
+							<div class="row mb-3">
+								<div class="col-4" th:each="contentType : ${T(com.spring.web.model.EntityEnum.ContentTypeTag).values()}">
+									<input type="checkbox" name="selectContents" class="content col-1 ms-3" th:value="${{contentType}}" th:text="${contentType}">
+																	
+								</div>
+							</div>
+							<div class="col-md-12 text-center">
+									<p style="text-align:center;">Note: Matching Locked Questions will be added to the quiz first</p>
+								</div>
+							<div class="row mb-3">
+								<div class="d-flex justify-content-end"> <!-- Use 'offset-md-6' to push the button to the right -->
+									<input type="submit" value="GENERATE" class="custom-button custom-button-black">
+									<button th:onclick="location.href='/quizList'" class="custom-button custom-button-red">CANCEL</button>
+								</div>
+							</div>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	
+	<script>
+	function timeLimit(element) {
+		let time_element = document.getElementById('allowedTime');
+		
+		if (element.checked) {
+			time_element.disabled = true;
+		}
+		else {
+			time_element.disabled = false;
+		}
+		
+	}
+	</script>
+	
+</body>
+</html>

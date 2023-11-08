@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html>
+<head>
+<!-- Latest compiled and minified CSS -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+<link rel="stylesheet" href="/style.css" th:href="@{/style.css}">
+<meta charset="UTF-8">
+<title>Question Editing Form</title>
+</head>
+
+<body style="background-color:#343434;">
+	<div class="row" style="margin:0px;">
+		<div  class="col-md-4">
+			<div th:insert="Sidebar :: sidebar"></div>
+		</div>
+		
+		<div class="col-md-8">
+		
+			<div class="row">
+			
+				<div th:insert="util :: header"></div>
+				
+			</div>
+			
+			<div class="row" style="margin-top: 15px; margin-bottom: 5px;">
+			
+				<div class="col-md-12">
+				
+					<div class="jumbotron card card-block">
+					
+						<!-- main content goes within this jumbotron -->
+						
+						<div class="row">
+						
+							<h2 style="text-align: center;">Edit Quiz</h2>
+							
+						</div>
+						
+						<form th:action="@{/editQuizObject}" method="POST" th:object="${quiz}">
+			
+							<div class="row mt-3">	
+								<h3 style="text-align:center;">Question Category:</h3>
+							</div>
+							
+							
+							<div th:if="${quiz.quizType.name() == 'INTERVIEW_PREP'}" class="row justify-content-center mt-3 mb-3">
+								<input type="hidden" th:name="${quiz.quizType}" th:value="${{T(com.spring.web.model.EntityEnum.CategoryTag).INTERVIEW_PREP}}">
+								<input type="checkbox" th:name="${quiz.quizType}" class="category col-1" th:value="${{T(com.spring.web.model.EntityEnum.CategoryTag).INTERVIEW_PREP}}" th:text="${{T(com.spring.web.model.EntityEnum.CategoryTag).INTERVIEW_PREP.toString()}}" checked onclick="return false;">
+							</div>
+							
+							<div th:if="${quiz.quizType.name() == 'COURSE_CONTENT'}" class="row justify-content-center mb-3">
+								<input type="hidden" th:name="${quiz.quizType}" th:value="${{T(com.spring.web.model.EntityEnum.CategoryTag).COURSE_CONTENT}}">
+								<input type="checkbox" th:name="${quiz.quizType}" class="category col-1" th:value="${{T(com.spring.web.model.EntityEnum.CategoryTag).COURSE_CONTENT}}" th:text="${{T(com.spring.web.model.EntityEnum.CategoryTag).COURSE_CONTENT.toString()}}" checked onclick="return false;">
+							</div>
+							
+							<div class="row">
+								<h3 style="text-align:center;">Question Content Type:</h3>
+							</div>
+							
+							<div class="row">
+								<div class="col-4" th:each="contentType : ${T(com.spring.web.model.EntityEnum.ContentTypeTag).values()}">
+									<input type="checkbox" name="selectContents" class="content col-1 ms-3" th:value="${{contentType}}" th:text="${contentType}">
+								</div>
+							</div>
+							
+							<div class="row">
+								<h3 style="text-align:center;">Question Format:</h3>
+							</div>
+							
+							<div class="row justify-content-center">
+								<input type="checkbox" name="selectContents" class="format col-1" th:each="format : ${T(com.spring.web.model.EntityEnum.FormatTag).values()}" th:value="${{format}}" th:text="${format}">
+							</div>
+							
+							<div class="row justify-content-center">
+								<button type="button" onclick="search()" class="custom-button custom-button-black mt-3 mb-3 text-center w-auto">SEARCH</button>
+							</div>
+							
+							<input type="hidden" th:field="*{quizID}">
+							
+							<div class="row">
+								<h3 style="text-align:center;">Quiz Name</h3>
+							</div>
+							
+							<div class="row justify-content-center col-6 m-auto mb-3">
+								<input required type="text" th:field="*{quizName}">
+							</div>
+
+							<div class="row">
+								<h3 style="text-align:center;">Time Limit</h3>
+							</div>
+							
+							<div class="row justify-content-center align-items-center mb-3" th:switch="*{allowedTime}">
+								<div class="col-4">
+								</div>
+								<div th:case="0" class="row justify-content-center align-items-center mb-3">
+									<div class="col-2" >
+										<input class="format" type="checkbox" id="noTimeLimit" name="noTimeLimit" th:field="*{noTimeLimit}"  onchange="timeLimit(this)" th:checked="*{noTimeLimit ? false: true}" activated>
+										<label for="noTimeLimit">No Time Limit</label>
+									</div>
+									<div class="col-2">
+										<input class="col-6" required type="number" min="1" id="allowedTime" name="allowedTime" th:field="*{allowedTime}" disabled>
+										<label for="allowedTime" >minutes</label>
+									</div>
+								</div>
+								<div th:case="*" class="row justify-content-center align-items-center mb-3">
+									<div class="col-2" >
+										<input class="format" type="checkbox" id="noTimeLimit" name="noTimeLimit" th:field="*{noTimeLimit}"  onchange="timeLimit(this)">
+										<label for="noTimeLimit">No Time Limit</label>
+									</div>
+									<div class="col-2">
+										<input class="col-6" required type="number" min="1" id="allowedTime" name="allowedTime" th:field="*{allowedTime}" >
+										<label for="allowedTime" >minutes</label>
+									</div>
+								</div>
+								<div class="col-4">
+								</div>
+							</div>
+							<!--  
+							<div class="row justify-content-center col-1 m-auto mb-3">
+								<input required type="number" min="1" th:field="*{allowedTime}">
+							</div>
+							-->
+							<div id="add_question" class="row">
+								<h3 style="text-align:center;">Question Added:</h3>
+							</div>
+							
+							<div class="row added-question" th:each="question : ${addedQuestions}">
+								<div th:id="${question.questionId}" th:value="${question.questionId}"  th:class="${question.categoryTag.name()} + ' ' + ${question.contentTypeTag.name()} + ' ' + ${question.formatTag.name()} + ' row align-items-center text-center'">
+									<p class="col-4" th:text="${question.questionContent}"></p>
+									<p class="col-2" th:text="${question.categoryTag}"></p>
+									<p class="col-2" th:text="${question.contentTypeTag}"></p>
+									<p class="col-2" th:text="${question.formatTag}"></p>
+									<button type="button" onclick="removeQuestion(this)" class="custom-button custom-button-red col-1 w-auto" style="height:fit-content">X</button>
+								</div>
+							</div>
+							
+							<hr/>
+
+							<div th:each="question : ${allQuestions}" class="row " style="display:none;" th:switch="${addedQuestions.contains(question)}">
+								<div th:case="true" class="question-added">
+									<div th:id="${question.questionId}" th:value="${question.questionId}"  th:class="${question.categoryTag.name()} + ' ' + ${question.contentTypeTag.name()} + ' ' + ${question.formatTag.name()} + ' row align-items-center text-center'">
+										<p class="col-4" th:text="${question.questionContent}"></p>
+										<p class="col-2" th:text="${question.categoryTag}"></p>
+										<p class="col-2" th:text="${question.contentTypeTag}"></p>
+										<p class="col-2" th:text="${question.formatTag}"></p>
+										<input type="hidden" name="questions" th:value="${question.questionId}">
+										<button type="button" onclick="addQuestion(this)" class="custom-button custom-button-red col-1 w-auto" style="height:fit-content">ADD</button>
+									</div>
+								</div>
+								<div th:case="false" class="question">
+									<div th:id="${question.questionId}" th:value="${question.questionId}"  th:class="${question.categoryTag.name()} + ' ' + ${question.contentTypeTag.name()} + ' ' + ${question.formatTag.name()} + ' row align-items-center text-center'">
+										<p class="col-4" th:text="${question.questionContent}"></p>
+										<p class="col-2" th:text="${question.categoryTag}"></p>
+										<p class="col-2" th:text="${question.contentTypeTag}"></p>
+										<p class="col-2" th:text="${question.formatTag}"></p>
+										<input type="hidden" name="questions" th:value="${question.questionId}" disabled>
+										<button type="button" onclick="addQuestion(this)" class="custom-button custom-button-red col-1 w-auto" style="height:fit-content">ADD</button>
+									</div>
+								</div>
+							</div>
+							
+							<div class="row">
+								<div class="d-flex justify-content-end mb-2">
+									<input type="submit" value="SAVE" class="custom-button custom-button-black">
+									<button type="button" th:onclick="location.href='/quizDetails?quizId=' + [[*{quizID}]]" class="custom-button custom-button-red">CANCEL</button>	
+								</div>
+							</div>						
+						</form>
+						
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<script>
+	
+	function timeLimit(element) {
+		let time_element = document.getElementById('allowedTime');
+		
+		if (element.checked) {
+			time_element.disabled = true;
+		}
+		else {
+			time_element.disabled = false;
+		}
+		
+	}
+	
+	function removeQuestion(element) {
+		console.log(element.parentElement.parentElement);
+		let questionId = element.parentElement.id;
+		element.parentElement.parentElement.remove();
+		
+		let hidden_question = document.getElementById(questionId);
+		console.log(hidden_question);
+		hidden_question.children[4].disabled = true;
+		hidden_question.parentElement.classList.remove('question-added');
+		hidden_question.parentElement.classList.add('question');
+		hidden_question.parentElement.style.display = 'block';
+		
+	}
+	
+	function addQuestion(element) {
+		console.log(element.parentElement.parentElement);
+		element.parentElement.parentElement.classList.remove('question');
+		element.parentElement.parentElement.classList.add('question-added');
+		element.parentElement.parentElement.style.display = 'none';
+		element.parentElement.children[4].disabled = false;
+
+		
+		let my_elem = document.getElementById('add_question');
+		let div = document.createElement('div');
+		div.className = "row added-question";
+		div.appendChild(element.parentElement.cloneNode(true));
+		div.children[0].children[4].remove();
+		div.children[0].children[4].remove();
+		let x_button = '<button type="button" onclick="removeQuestion(this)" class="custom-button custom-button-red col-1 w-auto" style="height:fit-content">X</button>';
+		div.children[0].insertAdjacentHTML('beforeend', x_button);
+		console.log(div);
+	    my_elem.parentNode.insertBefore(div, my_elem.nextSibling);
+	}
+	
+	
+	/*
+		Searches for all questions that matches the checked tag types.
+		Having no tags checked for that tag type will search though all those tag types i.e not checking any format type will search through all format types.
+	*/
+	function search() {
+		
+		// Remove display on all questions
+		const questions = document.querySelectorAll(".question");
+		questions.forEach((element) => {
+			element.parentElement.style.display = 'none';
+		})
+		
+		// Get all checkboxes that has been checked
+		const checkbox_input = document.querySelectorAll("input[type=checkbox]");
+		const checked_checkbox = [];
+		checkbox_input.forEach((element) => {
+			if(element.checked) {
+				checked_checkbox.push(element);		
+			}
+			
+		});
+		
+		// Categorise each tags to the appropriate array so that it can be properly looped in a forEach loop
+		let category = [];
+		let content = [];
+		let format = [];
+		checked_checkbox.forEach((element) => {
+			if (element.classList.contains('category')) {
+				console.log(element);
+				category.push(element);
+			}
+			if (element.classList.contains('content')) {
+				console.log(element);
+				content.push(element);
+			}
+			if (element.classList.contains('format')) {
+				console.log(element);
+				format.push(element);
+			}
+			
+		})
+		
+		// If no checkboxes are selected for that tag type then all tags of that tag type to search through
+		let all_selection;
+		if (category.length == 0) {
+			all_selection = document.querySelectorAll('.category');
+			all_selection.forEach((element) => {
+				category.push(element)
+			})
+			console.log("EMPTY CATEGORY ADDED");
+		}
+		if (content.length == 0) {
+			all_selection = all_selection = document.querySelectorAll('.content');
+			all_selection.forEach((element) => {
+				content.push(element)
+			})
+			console.log("EMPTY CONTENT ADDED");
+		}
+		if (format.length == 0) {
+			all_selection = all_selection = document.querySelectorAll('.format');
+			all_selection.forEach((element) => {
+				format.push(element)
+			})
+			console.log("FORMAT ADDED");
+		}
+		
+		
+		// Search and display the element that fits the tags checked
+		let search;
+		category.forEach((categoryElement) => {
+			content.forEach((contentElement) => {
+				format.forEach((formatElement) => {				
+					search = document.querySelectorAll("." + categoryElement.value + "." + contentElement.value + "." + formatElement.value);
+					search.forEach((element) => {
+						if (element.parentElement.classList.contains('question'))
+							element.parentElement.parentElement.style.display = 'block';
+					}) 
+					
+					console.log(categoryElement.value + ' ' + contentElement.value + ' ' + formatElement.value);
+				})
+			})
+		})
+	}
+	</script>
+</body>
+</html>

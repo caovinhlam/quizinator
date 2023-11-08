@@ -1,0 +1,39 @@
+<div th:fragment="sidebar" class="row"  style="margin-top: 5px; margin-bottom: 5px;">
+	<div class="col-md-12">
+		<div class="jumbotron card card-block">
+			<div class="row">
+			
+				<h2 style="text-align: center;">Notifications</h2>
+				
+			</div>
+			<div class="row"  style="margin: 5px;">
+				
+				<div th:if="${session.notes}">
+					<div class ="row" th:each="note : ${session.notes}">
+						<div class="noteHover jumbotron card card-block" style="margin-top: 5px;background-color: #ededed; border-style: none;">
+							<a th:onclick="location.href='/deleteNote?id=' + [[${note.notificationID}]] + '&amp;page=deleteNote'">
+								<div class="col " th:text="${note.message}"></div>
+							</a>
+						</div>	
+					</div>
+				</div>
+			</div>
+			
+			
+			<div class="row">
+				<h2 style="text-align: center;">Favourites</h2>
+			</div>
+			<div class="row" style="margin: 5px;">
+				<div th:if="${session.favourites}">
+					<div class ="row" th:each="quiz : ${session.favourites}">
+						<div class="jumbotron card card-block" style="margin-top: 5px;background-color: #ededed; border-style: none;">
+							<a th:onclick="location.href='/quizDetails?quizId=' + [[${quiz.quizID}]]">
+								<div class="col" th:text="${quiz.quizName}"></div>
+							</a>
+						</div>	
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

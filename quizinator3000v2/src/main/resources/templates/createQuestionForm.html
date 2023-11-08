@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html>
+<head>
+<!-- Latest compiled and minified CSS -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+<link rel="stylesheet" href="/style.css" th:href="@{/style.css}">
+<meta charset="UTF-8">
+<title>Question Creation Form</title>
+</head>
+
+<body style="background-color:#343434;">
+	<div class="row" style="margin:0px;">
+		<div  class="col-md-4">
+			<div th:insert="Sidebar :: sidebar"></div>
+		</div>
+		
+		<div class="col-md-8">
+		
+			<div class="row">
+			
+				<div th:insert="util :: header"></div>
+				
+			</div>
+			
+			<div class="row" style="margin-top: 15px; margin-bottom: 5px;">
+			
+				<div class="col-md-12">
+				
+					<div class="jumbotron card card-block">
+					
+						<!-- main content goes within this jumbotron -->
+						
+						<div class="row">
+						
+							<h2 style="text-align: center;">Create New Question</h2>
+							
+						</div>
+						<form th:action="@{/createQuestionObject}" method="POST" th:object="${questionObject}">
+						
+							<div class="row">
+								<div class="col-md-6">
+									<h4 style="text-align:center;">Question Category:</h4>
+								</div>
+								<div class="col-md-6" th:if="${user.userRole.name() == 'TRAINER' or user.userRole.name() == 'BEACHED' or user.userRole.name() == 'POND'}">
+									<select name="categoryTag" id="categoryTag" onchange="showDiv1(this)">
+										<option th:field="*{categoryTag}" th:each="category : ${T(com.spring.web.model.EntityEnum.CategoryTag).values()}" th:value="${{category}}" th:text="${category}"></option>
+									</select>
+								</div>
+								<div class="col-md-6" th:if="${user.userRole.name() == 'SALES'}">
+									<p name="*{categoryTag}" th:text="${T(com.spring.web.model.EntityEnum.CategoryTag).INTERVIEW_PREP}"></p>
+									<input type="hidden" name="categoryTag" th:value="${{T(com.spring.web.model.EntityEnum.CategoryTag).INTERVIEW_PREP}}">
+								</div>
+								<div class="col-md-6" th:if="${user.userRole.name() == 'TRAINING'}">
+									<p name="*{categoryTag}" th:text="${T(com.spring.web.model.EntityEnum.CategoryTag).COURSE_CONTENT}"></p>
+									<input type="hidden" name="categoryTag" th:value="${{T(com.spring.web.model.EntityEnum.CategoryTag).COURSE_CONTENT}}">
+								</div>
+							</div>
+							
+							<div class="row">
+								<div class="col-md-6">
+									<h4 style="text-align:center;">Question Content Type:</h4>
+								</div>
+								<div class="col-md-6">
+									<select name="contentTypeTag" id="contentTypeTag">
+										<option th:field="*{contentTypeTag}" th:each="contentType : ${T(com.spring.web.model.EntityEnum.ContentTypeTag).values()}" th:value="${{contentType}}" th:text="${contentType}"></option>
+									</select>
+								</div>
+							</div>
+							
+							<div class="row">
+								<div class="col-md-6 text-center">
+									<h4 style="text-align:center;">Question:</h4>
+								</div>
+								
+								<div class="col-md-6">
+									<input required type="text" name="question" th:field="*{questionContent}">
+								</div>
+							</div>
+							
+							<div class="row">
+								<div class="col-md-6">
+									<h4 style="text-align:center;">Question Format:</h4>
+								</div>
+								<div class="col-md-6">
+									<select name="formatTag" id="formatTag" onchange="showAnswer(this)">
+										<option th:field="*{formatTag}" th:each="format : ${T(com.spring.web.model.EntityEnum.FormatTag).values()}" th:value="${{format}}" th:text="${format}"></option>
+									</select>
+								</div>
+							</div>
+							
+							<div id="short_answer" style="display:block">
+								<div class="row">
+									<div class="col-md-6">
+										<h4 style="text-align:center;">Correct Answer:</h4>
+									</div>
+									<div class="col-md-6">
+										<input id="short_answer_input" required type="text" name="answers" th:field="*{answers}" >
+									</div>
+								</div>
+							</div>
+							
+							<div id="multiple_choice" style="display:none">
+								<div class="row">
+									<div class="col-md-6">
+										<h4 style="text-align:center;">Correct Answer:</h4>
+									</div>
+									<div class="col-md-6">
+										<input id="multiple_choice_input" required type="text" name="answers" disabled >
+									</div>
+								</div>
+								<!-- 
+								<div class="row mb-3" th:each="answer, answerIndex : *{correctAnswer}">
+									<div class="col-md-6 text-center">
+										<input class="form-check-input me-1" type="checkbox" th:name="'correctAnswer[' + ${answerIndex.index} + ']'" th:checked="${answer}"/>
+									</div>
+									<div class="col-md-6">
+										<input required type="text" name="answers" th:field="*{answers}">
+									</div>
+								</div>
+								 -->
+								 
+								<div class="row mb-3" id="add_multi_choice">
+									<div class="col-md-6 text-center">
+										
+									</div>
+									<div class="col-md-6">
+										<button type="button" onclick="addMultiChoice()" class="custom-button custom-button-red">Add Answer</button>
+									</div>
+								</div>
+							</div>
+							
+							<div id="multiple_answer" style="display:none">
+								<div class="row">
+									<div class="col-md-6">
+										<h4 style="text-align:center;">Correct Answer:</h4>
+									</div>
+									<div class="col-md-6">
+										
+									</div>
+								</div>
+								
+								<div class="row mb-3">
+									<div class="col-md-6 text-center">
+										<input id="multiple_answer_checkbox" class="form-check-input me-1" type="checkbox"  name="correctAnswers" value='0' disabled>
+									</div>
+									<div class="col-md-6">
+										<input id="multiple_answer_input" required type="text" name="answers" disabled>
+									</div>
+								</div>
+								
+								<div class="row mb-3" id="add_multi_answer">
+									<div class="col-md-6 text-center">
+										
+									</div>
+									<div class="col-md-6">
+										<button type="button" onclick="addMultiAnswer()" class="custom-button custom-button-red">Add Answer</button>
+									</div>
+								</div>
+							</div>
+							
+							<div class="row">
+								<div class="d-flex justify-content-end mb-2"> <!-- Use 'offset-md-6' to push the button to the right -->
+									<input type="submit" value="CREATE" class="custom-button custom-button-black">
+									<button th:onclick="location.href='/questionList'" class="custom-button custom-button-red">CANCEL</button>
+								</div>
+							</div>
+
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<script>
+	function showDiv(element) {
+		if (element.value == "COURSE_CONTENT") {
+			const hidden_divs = document.querySelectorAll(".hidden_div");
+			console.log(hidden_divs);
+			hidden_divs.forEach(element => {
+				  element.style.display = 'flex';
+			});
+			
+			const $formatSelect = document.querySelector('#formatTag');
+		    $formatSelect.value = 'MULTI_CHOICE'
+	    
+		    const $contentSelect = document.querySelector('#contentTypeTag');
+		    $contentSelect.value = 'PRO_SKILLS';
+		    
+		}
+		else {
+		    const hidden_divs = document.querySelectorAll(".hidden_div");
+		    console.log(hidden_divs);
+			hidden_divs.forEach(element => {
+				  element.style.display = 'none';
+			});
+			
+			
+			const $formatSelect = document.querySelector('#formatTag');
+		    $formatSelect.value = 'SHORT_ANSWER'
+
+		    const $contentSelect = document.querySelector('#contentTypeTag');
+		    $contentSelect.value = null;
+		    
+		}    
+	}
+	
+	// Handles display and removal of answers dependant on which answer format user has chosen
+	function showAnswer(element) {
+		var answer_element;
+		var multiple_answers;
+		
+		if (element.value == "SHORT_ANSWER") {
+			
+			// Disable multi choice input and remove display
+			answer_element = document.getElementById('multiple_choice_input')
+			answer_element.disabled = true;
+			answer_element = document.getElementById('multiple_choice');
+			answer_element.style.display = 'none';
+			
+			// Remove all multi choice answers
+			multiple_answers = document.querySelectorAll(".multi_choice");
+		    console.log(multiple_answers);
+			multiple_answers.forEach(element => {
+				  element.remove();
+			});
+			
+			// Disable muli answer checkbox and input and remove display
+			answer_element = document.getElementById('multiple_answer_checkbox')
+			answer_element.disabled = true;
+			answer_element = document.getElementById('multiple_answer_input')
+			answer_element.disabled = true;
+			answer_element = document.getElementById('multiple_answer');
+			answer_element.style.display = 'none';
+			
+			// Remove all multi answers
+			multiple_answers = document.querySelectorAll(".multi_answer");
+			multiple_answers.forEach(element => {
+				  element.remove();
+			});
+			
+			// Re-enable short answer input and reinstate display
+			answer_element = document.getElementById('short_answer_input')	
+			answer_element.disabled = false;
+			answer_element = document.getElementById('short_answer')	
+			answer_element.style.display = 'block';
+			
+		}
+		else if (element.value == "MULTI_CHOICE") {
+			
+			// Disable short answer input and remove display
+			answer_element = document.getElementById('short_answer_input')	
+			answer_element.disabled = true;
+			answer_element = document.getElementById('short_answer');
+			answer_element.style.display = 'none';
+			
+			// Disable muli answer checkbox and input and remove display
+			answer_element = document.getElementById('multiple_answer_checkbox')
+			answer_element.disabled = true;
+			answer_element = document.getElementById('multiple_answer_input')
+			answer_element.disabled = true;
+			answer_element = document.getElementById('multiple_answer');
+			answer_element.style.display = 'none';
+			
+			// Remove all multi answers
+			multiple_answers = document.querySelectorAll(".multi_answer");
+			multiple_answers.forEach(element => {
+				  element.remove();
+			});
+			
+			// Re-enable multi choice answer input and reinstate display
+			answer_element = document.getElementById('multiple_choice_input')
+			answer_element.disabled = false;
+			answer_element = document.getElementById('multiple_choice');
+			answer_element.style.display = 'block';
+			
+		}
+		else if (element.value == "MULTI_ANSWER") {
+			
+			// Disable short answer input and remove display
+			answer_element = document.getElementById('short_answer_input')	
+			answer_element.disabled = true;
+			answer_element = document.getElementById('short_answer');
+			answer_element.style.display = 'none';
+			
+			// Disable multi choice input and remove display
+			answer_element = document.getElementById('multiple_choice_input')
+			answer_element.disabled = true;
+			answer_element = document.getElementById('multiple_choice');
+			answer_element.style.display = 'none';
+			
+			// Remove all multi choice answers
+			multiple_answers = document.querySelectorAll(".multi_choice");
+			multiple_answers.forEach(element => {
+				  element.remove();
+			});
+			
+			// Re-enable multi answer input and checkbox and reinstate display
+			answer_element = document.getElementById('multiple_answer_checkbox')
+			answer_element.disabled = false;
+			answer_element = document.getElementById('multiple_answer_input')
+			answer_element.disabled = false;
+			answer_element = document.getElementById('multiple_answer');
+			answer_element.style.display = 'block';
+		}
+	}
+	
+	// Adds the next multiple choice answer
+	function addMultiChoice() {
+		var my_elem = document.getElementById('add_multi_choice');
+		var div = document.createElement('div');
+		div.className = "row multi_choice";
+	    div.innerHTML = '<div class="col-md-6 text-center"><h4 style="text-align:center;">Wrong Answer:</h4></div><div class="col-md-3 w-auto"><input required type="text" name="answers"></div><div class="col-md-3"><button type="button" onclick="deleteMultiChoice(this)" class="custom-x-button-red">X</button></div>';
+	    my_elem.parentNode.insertBefore(div, my_elem)
+	}
+	
+	// Remove currently selected multiple choice answer
+	function deleteMultiChoice(element) {
+		element.parentNode.parentNode.remove();
+	}
+	
+	// Adds the next multiple answer
+	function addMultiAnswer() {
+		var value = document.querySelectorAll(".multi_answer").length+1;
+		var my_elem = document.getElementById('add_multi_answer');
+		var div = document.createElement('div');
+		div.className = "row mb-3 multi_answer";
+		div.innerHTML = '<div class="col-md-6 text-center"><input class="form-check-input me-1" type="checkbox"  name="correctAnswers" value=' + value + '></div><div class="col-md-3"><input required type="text" name="answers"></div><div class="col-md-3"><button type="button" onclick="deleteMultiAnswer(this)" class="custom-x-button-red">X</button></div>';
+	    my_elem.parentNode.insertBefore(div, my_elem)
+	}
+	
+	// Remove currently selected multiple answer
+	function deleteMultiAnswer(element) {
+		// Remove the current answer
+		element.parentNode.parentNode.remove();
+		
+		// Reset the value of every multi answer
+		var value_counter = 1;
+		var multiple_answers = document.querySelectorAll(".multi_answer");
+		multiple_answers.forEach(element => {
+			element.firstElementChild.firstElementChild.value = value_counter;
+			value_counter++;
+		});
+	}
+	</script>
+</body>
+</html>

@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html>
+<head>
+<!-- Latest compiled and minified CSS -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+<link rel="stylesheet" href="/style.css" th:href="@{/style.css}">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<meta charset="UTF-8">
+<title>Quizzes</title>
+</head>
+
+<body style="background-color:#343434;">
+	<div class="row" style="margin:0px;">
+		<div  class="col-md-4">
+			<div th:insert="Sidebar :: sidebar"></div>
+		</div>
+		
+		<div class="col-md-8">
+		
+			<div class="row">
+			
+				<div th:insert="util :: header"></div>
+				
+			</div>
+			
+			<div class="row" style="margin-top: 15px; margin-bottom: 5px;">
+			
+				<div class="col-md-12">
+				
+					<div class="jumbotron card card-block">
+					
+						<!-- main content goes within this jumbotron -->
+						
+						<div class="row">
+						
+							<h2 style="text-align: center;">Quizzes</h2>
+							
+						</div>
+						
+						<div class="row">
+							<div class="col">
+								<div class="d-flex justify-content-center">
+									<button th:onclick="location.href='/createQuizManual'" class="custom-button custom-button-black">Manually Create Quiz</button>
+								</div>
+							</div>
+							<div class="col">
+								<div class="d-flex justify-content-center">
+									<button th:onclick="location.href='/createQuiz'" class="custom-button custom-button-black">Auto Generate Quiz</button>
+								</div>
+							</div>
+						</div>
+						
+						<div class="row" th:if="${myQuizzes.size() > 0}">
+							<h3 style="text-align: center;">My Quizzes</h3>
+						</div>
+						
+						<div class="row" th:if="${myQuizzes.size() > 0}">
+							<div class="row text-center mt-2 align-items-center">
+								<div class="col-2">
+									<div><b>Quiz Name</b></div>
+								</div>
+								<div class="col-2">
+									<div><b>Content Type</b></div>
+								</div>
+								<div class="col-2">
+									<div><b>Creator Name</b></div>
+								</div>
+								<div class="col-2">
+									<div><b>Allowed Time</b></div>
+								</div>
+								<div class="col-2">
+									<div><b># of Questions</b></div>
+								</div>
+								<div class="col-2">
+								</div>
+								<div class="col-1">
+								</div>
+								</div>
+							<div th:each="quiz : ${myQuizzes}" class="row text-center mt-2 align-items-center">
+								<div class="col-2">
+									<div th:text="${quiz.quizName}"></div>
+								</div>
+								<div class="col-2">
+									<div th:text="${quiz.quizType}"></div>
+								</div>
+								<div class="col-2">
+									<div th:text="${quiz.user.name}"></div>
+								</div>
+								<div class="col-2" th:switch="${quiz.allowedTime}">
+									<div th:case="2147483647" th:text="${'No Limit'}"></div>
+									<div th:case="*" th:text="${quiz.allowedTime}"></div>
+								</div>
+								<div class="col-2">
+									<div th:text="${quiz.numberOfQuestions}"></div>
+								</div>
+								<div class="col-1">
+									<button th:onclick="location.href='/quizDetails?quizId=' + [[${quiz.quizID}]]" class="custom-button custom-button-black">Quiz Details</button>
+								</div>
+
+								<div class="col-1">
+									<i th:if="${quiz.approved}" class="fa fa-check" style="font-size:30px;color:green"></i>
+									<i th:if="${!quiz.approved and quiz.reviewed}" class="fa fa-times" style="font-size:36px;color:red"></i>
+									<i th:if="${!quiz.approved and !quiz.reviewed}" class="fa fa-clock-o" style="font-size:30px;color:orange"></i>
+								</div>
+								<div class="row mt-2" style="height:1px;"><div class="col-1"></div><div class="col-8" style="background-color:rgb(255, 213, 213);"></div><div class="col"></div></div>
+							</div>
+						</div>
+						
+						<div class="row mt-2" style="height:2px;"><div class="col-1"></div><div class="col-8"></div><div class="col"></div></div>
+						
+						<div class="row">
+							<h3 style="text-align: center;">All Quizzes</h3>
+						</div>
+						
+						<div class="row" th:if="${quizzes}">
+							<div class="row text-center mt-2 align-items-center">
+								<div class="col-2">
+									<div><b>Quiz Name</b></div>
+								</div>
+								<div class="col-2">
+									<div><b>Content Type</b></div>
+								</div>
+								<div class="col-2">
+									<div><b>Creator Name</b></div>
+								</div>
+								<div class="col-2">
+									<div><b>Allowed Time</b></div>
+								</div>
+								<div class="col-2">
+									<div><b># of Questions</b></div>
+								</div>
+								<div class="col-2">
+								</div>
+								<div class="col-1">
+								</div>
+							</div>
+							<div th:each="quiz : ${quizzes}" class="row text-center mt-2 align-items-center">
+								<div class="col-2">
+									<div th:text="${quiz.quizName}"></div>
+								</div>
+								<div class="col-2">
+									<div th:text="${quiz.quizType}"></div>
+								</div>
+								<div class="col-2">
+									<div th:text="${quiz.user.name}"></div>
+								</div>
+								<div class="col-2" th:switch="${quiz.allowedTime}">
+									<div th:case="2147483647" th:text="${'No Limit'}"></div>
+									<div th:case="*" th:text="${quiz.allowedTime}"></div>
+								</div>
+								<div class="col-2">
+									<div th:text="${quiz.numberOfQuestions}"></div>
+								</div>
+								<div class="col-1">
+									<button th:onclick="location.href='/quizDetails?quizId=' + [[${quiz.quizID}]]" class="custom-button custom-button-black">Quiz Details</button>
+								</div>
+
+								<div class="col-1">
+									<a th:onclick="location.href='/favouriteQuiz?quizid=' + [[${quiz.quizID}]] + '&amp;page=quizList'">
+										<i th:if="${#lists.contains(favourites, quiz)}" class="fa fa-heart" style="font-size:24px;color:red"></i>
+										<i th:if="${!#lists.contains(favourites, quiz)}" class="fa fa-heart" style="font-size:24px;color:black"></i>
+									</a>
+								</div>
+								<div class="row mt-2" style="height:1px;"><div class="col-1"></div><div class="col-8" style="background-color:rgb(255, 213, 213);"></div><div class="col"></div></div>
+							</div>
+						</div>
+			
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	
+</body>
+</html>

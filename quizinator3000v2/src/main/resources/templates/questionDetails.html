@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html>
+<head>
+<!-- Latest compiled and minified CSS -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+<link rel="stylesheet" href="/style.css" th:href="@{/style.css}">
+<meta charset="UTF-8">
+<title>Question Details</title>
+</head>
+
+<body style="background-color:#343434;">
+	<div class="row"  style="margin:0px;">
+		<div  class="col-md-4">
+			<div th:insert="Sidebar :: sidebar"></div>
+		</div>
+		
+		<div class="col-md-8">
+		
+			<div class="row">
+			
+				<div th:insert="util :: header"></div>
+				
+			</div>
+			
+			<div class="row" style="margin-top: 15px; margin-bottom: 5px;">
+			
+				<div class="col-md-12">
+				
+					<div class="jumbotron card card-block" th:object="${questionObject}">
+					
+						<!-- main content goes within this jumbotron -->
+						
+						<div class="row">
+							<h2 style="text-align: center;">Question Details</h2>
+						</div>
+						
+						<div class="row">
+							<div class="col-md-6">
+								<h4 style="text-align:center;">User Created:</h4>
+							</div>
+							<div class="col-md-6">
+								<p name="${userCreated}" th:text="${userCreated}"></p>
+							</div>
+						</div>
+						
+						<div class="row">
+							<div class="col-md-6">
+								<h4 style="text-align:center;">Question Category:</h4>
+							</div>
+							<div class="col-md-6">
+								<p name="*{categoryTag}" th:text="*{categoryTag}"></p>
+							</div>
+						</div>
+						
+						<div class="row">
+							<div class="col-md-6">
+								<h4 style="text-align:center;">Question Content Type:</h4>
+							</div>
+							<div class="col-md-6">
+								<p name="*{contentTypeTag}" th:text="*{contentTypeTag}"></p>
+							</div>
+						</div>
+						
+						<div class="row">
+							<div class="col-md-6">
+								<h4 style="text-align:center;">Question Format:</h4>
+							</div>
+							<div class="col-md-6">
+								<p name="*{formatTag}" th:text="*{formatTag}"></p>
+							</div>
+						</div>
+						
+						<div class="row" >
+							<div class="col-md-6 text-center">
+								<h4 style="text-align:center;">Question:</h4>
+						</div>
+							
+						<div class="col-md-6">
+								<p name="*{questionContent}" th:text="*{questionContent}"></p>
+							</div>
+						</div>
+						
+						<div class="row" >
+							<div class="col-md-6 text-center">
+								<h4 style="text-align:center;">Answers:</h4>
+							</div>
+							
+							<div class="col-md-6">
+								
+							</div>
+						</div>
+						
+						
+						<div class="row" th:each= "answer : ${answers}">
+							<div class="col-md-6" th:switch="${answer.correct}">
+								<h4 th:case="true" style="text-align:center;color:green;">Correct</h4>
+								<h4 th:case="false" style="text-align:center;color:red" >Wrong</h4>
+							</div>
+							<div class="col-md-6">
+								<p name="${answer.answerId}" th:text="${answer.answer}"></p>
+							</div>
+						</div>
+						
+						<div class="row mb-2" th:switch="${#strings.toString(user.userRole)}">
+							<div th:case="'Trainer'" class="d-flex justify-content-end">
+								<button th:if="${!questionObject.reviewed or !questionObject.approved}" th:onclick="location.href='/finishReview?id=' + [[${questionObject.questionId}]] + '&amp;value=' + [[${!questionObject.approved}]] + '&amp;page=finishReview'"  class="custom-button custom-button-red">Accept</button>
+								<button th:if="${!questionObject.reviewed or !questionObject.approved}" th:onclick="location.href='/finishReview?id=' + [[${questionObject.questionId}]] + '&amp;value=' + [[${questionObject.approved}]] + '&amp;page=finishReview'"  class="custom-button custom-button-red">Reject</button>
+								<button th:onclick="location.href='/editQuestion?questionId=' + [[*{questionId}]]" class="custom-button custom-button-black">Edit</button>
+								<button th:onclick="location.href='/deleteQuestionObject?questionId=' + [[${questionObject.questionId}]] " class="custom-button custom-button-red">Delete</button>
+							</div>
+							
+							<div th:case="'Sales'" th:if="${questionObject.categoryTag.name() == 'INTERVIEW_PREP'}" class="d-flex justify-content-end"> 
+								<button th:if="${!questionObject.reviewed or !questionObject.approved}" th:onclick="location.href='/finishReview?id=' + [[${questionObject.questionId}]] + '&amp;value=' + [[${!questionObject.approved}]] + '&amp;page=finishReview'"  class="custom-button custom-button-red">Accept</button>
+								<button th:if="${!questionObject.reviewed or !questionObject.approved}" th:onclick="location.href='/finishReview?id=' + [[${questionObject.questionId}]] + '&amp;value=' + [[${questionObject.approved}]] + '&amp;page=finishReview'"  class="custom-button custom-button-red">Reject</button>
+								<button th:onclick="location.href='/editQuestion?questionId=' + [[*{questionId}]]" class="custom-button custom-button-black">Edit</button>
+								<button th:onclick="location.href='/deleteQuestionObject?questionId=' + [[${questionObject.questionId}]] " class="custom-button custom-button-red">Delete</button>
+							</div>
+							
+							<div th:case="*" th:if="${questionObject.user.userId == user.userId} and ${!questionObject.approved}" class="d-flex justify-content-end">
+								<button th:onclick="location.href='/editQuestion?questionId=' + [[*{questionId}]]" class="custom-button custom-button-black">Edit</button>
+								<button th:onclick="location.href='/deleteQuestionObject?questionId=' + [[${questionObject.questionId}]] " class="custom-button custom-button-red">Delete</button>
+							</div>
+						</div>
+
+				</div>
+				
+			</div>
+		</div>
+	</div>
+	</div>
+</body>
+</html>

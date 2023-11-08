@@ -1,0 +1,1 @@
+packageSearchIndex = [{"l":"All Packages","u":"allpackages-index.html"},{"l":"com.spring.web"},{"l":"com.spring.web.controller"},{"l":"com.spring.web.dal"},{"l":"com.spring.web.model"},{"l":"com.spring.web.model.EntityEnum"},{"l":"com.spring.web.service"}];updateSearchResults();

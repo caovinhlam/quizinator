@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html>
+<head>
+<!-- Latest compiled and minified CSS -->
+<meta charset="UTF-8">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+<link rel="stylesheet" href="/style.css" th:href="@{/style.css}">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+     
+<title>Locked Questions</title>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/themes/smoothness/jquery-ui.css">
+<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+
+
+</head>
+
+<body style="background-color:#343434;">
+<div class="row"  style="margin:0px;">
+	<div  class="col-md-4">
+		<div th:insert="Sidebar :: sidebar"></div>
+	</div>
+	
+	<div class="col-md-8">
+	
+		<div class="row">
+		
+			<div th:insert="util :: header"></div>
+			
+		</div>
+		
+		<div class="row" style="margin-top: 15px; margin-bottom: 5px;">
+		
+			<div class="col-md-12">
+			
+				<div class="jumbotron card card-block">
+				<!-- main content goes within this jumbotron -->
+					
+					
+					<div class="row">
+					
+						<h2 style="text-align: center;">Locked Questions</h2>
+						
+					</div>
+		
+					
+					<div class="row">
+					
+						<div class="col-md-12 offset-md-10"> <!-- Use 'offset-md-6' to push the button to the right -->
+							
+						</div>
+					</div>
+
+					<div class="row">
+											
+						<div class="col-md-12 text-center" >
+							<div class="row text-center mt-2 align-items-center">
+															
+								<div class="col">
+									<div><b>Question Content</b></div>
+								</div>
+								<div class="col">
+									<div><b>Category Type</b></div>
+								</div>
+								<div class="col">
+									<div><b>Content Type</b></div>
+								</div>
+								<div class="col">
+									<div><b>Format</b></div>
+								</div>
+								<div class="col-2">
+								</div>
+								
+							</div>
+							<div class="row" th:if="${#lists.isEmpty(lockedQuestions)}">
+									<p style="color:red; text-align:center;" >You have no locked questions</p>						
+							</div>
+							<div class="row text-center mt-2 align-items-center" th:each="question : ${lockedQuestions}" style="align-items:center;">
+							
+								<div class="col">
+									<div><a class="link-underline link-underline-opacity-0 fs-5 text" th:text="${question.questionContent}"></a></div>
+								</div>
+								<div class="col">
+									<div><p th:text="${question.categoryTag}"></p></div>
+								</div>
+								<div class="col">
+									<div><p th:text="${question.contentTypeTag}"></p></div>
+								</div>
+								<div class="col">
+									<div><p th:text="${question.formatTag}"></p></div>
+								</div>
+								
+								<div class="col-2">
+									<a th:onclick="location.href='/lockQuestion?questionId=' + [[${question.questionId}]] + '&amp;page=lockedQuestionsDetails'">
+										<i th:if="${#lists.contains(lockedQuestions, question)}" class="fa fa-lock" style="font-size:24px;color:black"></i>
+										<i th:if="${!#lists.contains(lockedQuestions, question)}" class="fa fa-unlock" style="font-size:24px;color:red"></i>
+									</a>
+								</div>
+								
+								<div class="row" style="height:1px;margin-top:5px;margin-bottom:5px;"><div class="col-2"></div><div class="col-8" style="background-color:rgb(255, 213, 213);"></div><div class="col-2"></div></div>
+							</div>
+						</div>
+						</div>
+					
+			
+				</div>
+				
+			</div>
+			
+		</div>
+	</div>
+	</div>
+</body>
+</html>

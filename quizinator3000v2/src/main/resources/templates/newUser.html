@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html>
+<head>
+<!-- Latest compiled and minified CSS -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+<link rel="stylesheet" href="/style.css" th:href="@{/style.css}">
+<meta charset="UTF-8">
+<title>Register New Admin</title>
+</head>
+
+<body style="background-color:#343434;">
+<div class="row" style="margin:0px;">
+	<div  class="col-md-4">
+		<div th:insert="Sidebar :: sidebar"></div>
+	</div>
+	
+	<div class="col-md-8">
+	
+		<div class="row">
+		
+			<div th:insert="util :: header"></div>
+			
+		</div>
+		
+		<div class="row" style="margin-top: 15px; margin-bottom: 5px;">
+		
+			<div class="col-md-12">
+			
+				<div class="jumbotron card card-block">
+					<div class="center">				
+					
+					<div class="row" th:switch="${#strings.toString(loggedinuser.userRole)}"> 
+						<div th:case="'Trainer'">
+							<div id="register" class="tabcontent">
+							<h1 class="header">Register Trainer Account</h1>
+							<br>
+							<div th:if="${message}" class="row">
+								<div class="alert alert-danger" role="alert">
+									<p th:text="${message}" class="text-center text-danger" ></p>
+								</div>
+							</div>
+							
+								<form th:action="@{/registerTrainerObject}" method="POST" autocomplete="off" th:object="${user}">
+									<div class="row">
+								        	<div class="col-6">
+										    	<label for="name">Email:</label>
+										    </div>
+										    <div class="col-6">
+										    	<input type="text" id="name" name="name" th:field="*{email}" placeholder="Enter the users email" required maxlength="40" /><br>
+										    </div>
+									</div>
+									
+								    <div class="row" style="margin-top:10px;">
+										<div class="col-6">
+									    	<label for="number">Name:</label>
+									    </div>
+									    <div class="col-6">
+									    	<input type="text" id="number" name="number" th:field="*{name}" placeholder="Enter the users name" required maxlength="20" /><br>
+									    </div>
+								    </div>
+									    
+									<div class="row" style="margin-top:10px;">
+									    <div class="alert alert-secondary" role="alert">
+									    	<label for="password">Password is set to the email of the user</label><br>
+									    	<label for="password">User will be prompted to change this on login</label>
+									    </div>
+									</div>
+									<br>
+									
+									<div class="row">
+										<div class="col-6">
+									    	<label for="number">My password:</label>
+									    </div>
+									    <div class="col-6">
+									    	<input type="password" id="password" name="password" th:field="*{password}" placeholder="input currently logged in accounts password" required maxlength="20" /><br>
+									    </div>
+								    </div>
+									    
+									<input type="submit" value="Save" class="submit-btn" />
+									    
+								</form>
+							</div>
+						</div>		
+										
+					 	<div th:case="'Sales'">
+							 <div id="register" class="tabcontent">
+							<h1 class="header">Register Sales Account</h1>
+							<br>
+							<div th:if="${message}" class="row">
+								<div class="alert alert-danger" role="alert">
+									<p th:text="${message}" class="text-center text-danger" ></p>
+								</div>
+							</div>
+							
+								<form th:action="@{/registerSalesObject}" autocomplete="off" method="POST" th:object="${user}">
+									<div class="row">
+								        	<div class="col-6">
+										    	<label for="name">Email:</label>
+										    </div>
+										    <div class="col-6">
+										    	<input type="text" id="email1" name="email" th:field="*{email}" placeholder="Enter the users email" required maxlength="40" /><br>
+										    </div>
+									</div>
+									
+								    <div class="row" style="margin-top:10px;">
+										<div class="col-6">
+									    	<label for="number">Name:</label>
+									    </div>
+									    <div class="col-6">
+									    	<input type="text" id="name1" name="name" th:field="*{name}" placeholder="Enter the users name" required maxlength="20" /><br>
+									    </div>
+								    </div>
+									    
+									<div class="row" style="margin-top:10px;">
+									    <div class="alert alert-secondary" role="alert">
+									    	<label for="password">Password is set to the email of the user</label><br>
+									    	<label for="password">User will be prompted to change this on login</label>
+									    </div>
+									</div>
+									<br>
+									
+									<div class="row">
+										<div class="col-6">
+									    	<label for="number">My password:</label>
+									    </div>
+									    <div class="col-6">
+									    	<input type="password" id="password1" name="password" th:field="*{password}" placeholder="input currently logged in accounts password" required maxlength="20" /><br>
+									    </div>
+								    </div>
+									
+									<input type="submit" value="Save" class="submit-btn" />
+									    
+								</form>
+							</div>
+						</div>
+							
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	</div>
+</body>
+</html>

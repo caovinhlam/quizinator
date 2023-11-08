@@ -1,0 +1,74 @@
+<div th:fragment="student" class='jumbotron card card-block' style="border: none;width: 100%; top: 0; left: 0; background-color: white; padding: 10px 20px; margin-top:5px;">
+    <div class="row">
+    	<div class="col">
+	    	<div class="d-flex justify-content-center">
+	    		<button th:onclick="location.href='/lockedQuestionsDetails'"  class="custom-button custom-button-black">Locked Questions</button>
+	    	</div>
+		</div>
+		<div class="col">
+	    	<div class="d-flex justify-content-center">
+	    		<button th:onclick="location.href='/viewQuizesCreated?id=' + [[${user.userId}]] + '&amp;page=viewQuizesCreated'"  class="custom-button custom-button-black">Created Quizzes</button>
+			</div>
+		</div>
+    </div>
+</div>
+
+<div th:fragment="trainer" class='jumbotron card card-block' style="border: none; width: 100%; top: 0; left: 0; background-color: white; padding: 10px 20px; margin-top:5px;">
+    <div class="row">
+    	<div class="col">
+    		<div class="d-flex justify-content-center">
+    			<button th:onclick="location.href='/viewUnreviewed?page=viewUnreviewed'"  class="custom-button custom-button-black">Review Questions</button>
+			</div>
+		</div>       	
+		<div class="col">
+    		<div class="d-flex justify-content-center">
+    			<button th:onclick="location.href='/viewUnreviewedQuiz?page=viewUnreviewed'"  class="custom-button custom-button-black">Review Quizzes</button>
+			</div>
+		</div> 		
+		<div class="col">
+    		<div class="d-flex justify-content-center">
+    			<button th:onclick="location.href='/markSubmissionList'"  class="custom-button custom-button-black">Mark Quizzes</button>
+			</div>
+		</div>    	
+		<div class="col">
+			<div class="d-flex justify-content-center">
+    			<button th:onclick="location.href='/createUser'"  class="custom-button custom-button-black">Create Trainer</button>
+			</div>
+		</div>
+		<div class="col">
+	    	<div class="d-flex justify-content-center">
+	    		<button th:onclick="location.href='/lockedQuestionsDetails'" class="custom-button custom-button-black">Locked Questions</button>
+	    	</div>
+		</div>
+    </div>
+</div>
+
+<div th:fragment="sales" class='jumbotron card card-block' style="border: none; width: 100%; top: 0; left: 0; background-color: white; padding: 10px 20px; margin-top:5px;">
+    <div class="row">
+    	<div class="col">
+    		<div class="d-flex justify-content-center">
+    			<button th:onclick="location.href='/viewUnreviewed?page=viewUnreviewed'"  class="custom-button custom-button-black">Review Questions</button>
+			</div>
+		</div>
+		<div class="col">
+    		<div class="d-flex justify-content-center">
+    			<button th:onclick="location.href='/viewUnreviewedQuiz?page=viewUnreviewed'"  class="custom-button custom-button-black">Review Quizzes</button>
+			</div>
+		</div> 
+		<div class="col">
+    		<div class="d-flex justify-content-center">
+    			<button th:onclick="location.href='/markSubmissionList'"  class="custom-button custom-button-black">Mark Quizzes</button>
+			</div>
+		</div> 
+		<div class="col">
+			<div class="d-flex justify-content-center">
+    			<button th:onclick="location.href='/createUser'"  class="custom-button custom-button-black">Create Sales</button>
+    		</div>
+		</div>
+		<div class="col">
+	    	<div class="d-flex justify-content-center">
+	    		<button th:onclick="location.href='/lockedQuestionsDetails'"  class="custom-button custom-button-black">Locked Questions</button>
+	    	</div>
+		</div>
+    </div>
+</div>
