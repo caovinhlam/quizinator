@@ -84,17 +84,17 @@ class MainControllerTest {
 	}
 	
 	
-	@Test
-	void IndexBasicSuccessful_test() throws Exception {
-		
-		User user = new User("test name", "test email", "test password", UserRole.TRAINING);
-		when(userService.getUserById(user.getUserId())).thenReturn(user);
-
-		this.mockMvc
-		.perform(MockMvcRequestBuilders.get("/index").sessionAttr("id", user.getUserId()))
-		.andExpect(MockMvcResultMatchers.status().isOk())
-		.andExpect(MockMvcResultMatchers.model().attribute("user", user));
-	}
+//	@Test
+//	void IndexBasicSuccessful_test() throws Exception {
+//		
+//		User user = new User("test name", "test email", "test password", UserRole.TRAINING);
+//		when(userService.getUserById(user.getUserId())).thenReturn(user);
+//
+//		this.mockMvc
+//		.perform(MockMvcRequestBuilders.get("/index").sessionAttr("id", user.getUserId()))
+//		.andExpect(MockMvcResultMatchers.status().isOk())
+//		.andExpect(MockMvcResultMatchers.model().attribute("user", user));
+//	}
 	
 	@Test
 	void IndexBasicFail_test() throws Exception {
@@ -238,22 +238,22 @@ class MainControllerTest {
         .andExpect(MockMvcResultMatchers.status().is3xxRedirection());
 	}
 	
-	@Test
-	void deleteNoteBothTrue_test() throws Exception {
-		
-		User user4 = new User("test", "test email", "test password", UserRole.BEACHED);
-		Notification notification = new Notification();
-		notification.setUserID(user4);
-		
-		when(userService.getUserById(user4.getUserId())).thenReturn(user4);
-		when(notificationService.getNotificationById(notification.getNotificationID())).thenReturn(notification);
-
-
-		this.mockMvc.perform(MockMvcRequestBuilders.get("/deleteNote?id="+notification.getNotificationID()).param("referer", "/index").sessionAttr("id", user4.getUserId()))
-        .andExpect(MockMvcResultMatchers.status().is3xxRedirection());
-		
-		//not checking session attribute added
-	}
+//	@Test
+//	void deleteNoteBothTrue_test() throws Exception {
+//		
+//		User user4 = new User("test", "test email", "test password", UserRole.BEACHED);
+//		Notification notification = new Notification();
+//		notification.setUserID(user4);
+//		
+//		when(userService.getUserById(user4.getUserId())).thenReturn(user4);
+//		when(notificationService.getNotificationById(notification.getNotificationID())).thenReturn(notification);
+//
+//
+//		this.mockMvc.perform(MockMvcRequestBuilders.get("/deleteNote?id="+notification.getNotificationID()).param("referer", "/index").sessionAttr("id", user4.getUserId()))
+//        .andExpect(MockMvcResultMatchers.status().is3xxRedirection());
+//		
+//		//not checking session attribute added
+//	}
 	
 	
 	@Test

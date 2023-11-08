@@ -358,3 +358,16 @@ Caused by: org.hibernate.query.SemanticException: Operand of 'like' is of type '
 2023-11-08 11:10:20.776 ERROR c.s.web.controller.MainController - index page access attempted while not logged in
 2023-11-08 11:10:20.791 ERROR c.s.web.controller.LoginController - redirected to the login page as not logged in
 2023-11-08 11:37:52.868 ERROR c.s.web.controller.LoginController - redirected to the login page as not logged in
+2023-11-08 12:21:54.606 INFO  c.s.web.controller.LoginController - editing own profile
+2023-11-08 12:21:54.914 ERROR c.s.web.controller.LoginController - user not logged in tried to access the change pass page
+2023-11-08 12:21:54.954 ERROR c.s.web.controller.LoginController - user tried to update a password without permissions
+2023-11-08 12:21:55.081 ERROR c.s.web.controller.LoginController - User log in attempted - incorrect email
+2023-11-08 12:21:55.122 ERROR c.s.web.controller.LoginController - redirected to the login page as not logged in
+2023-11-08 12:21:55.140 INFO  c.s.web.controller.LoginController - User logged out: null
+2023-11-08 12:21:55.373 INFO  c.s.web.controller.LoginController - page for password changing displayed
+2023-11-08 12:21:55.408 INFO  c.s.web.controller.LoginController - redirected to the index page as logged in
+2023-11-08 12:21:56.011 ERROR c.s.web.controller.LoginController - passwords didnt match redirecting
+2023-11-08 12:21:56.380 INFO  c.s.web.controller.LoginController - User logged in7
+2023-11-08 12:21:56.734 INFO  c.s.web.controller.LoginController - User prompted to change password - userid - 8
+2023-11-08 12:21:56.923 INFO  c.s.web.controller.LoginController - User prompted to change password - userid - 8
+2023-11-08 12:21:57.178 ERROR c.s.web.controller.LoginController - User log in attempted - incorrect password
